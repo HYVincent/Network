@@ -5,11 +5,25 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
+import com.google.gson.Gson;
 import com.lwx.study.R;
+import com.lwx.study.app.Constant;
+import com.lwx.study.bean.LoginEntity;
 import com.lwx.study.bean.Result;
+import com.lwx.study.bean.Result2;
 import com.lwx.study.bean.WeatherEntity;
 import com.lwx.study.network.ApiManager;
+import com.vise.log.ViseLog;
+import com.yolanda.nohttp.NoHttp;
+import com.yolanda.nohttp.RequestMethod;
+import com.yolanda.nohttp.rest.OnResponseListener;
+import com.yolanda.nohttp.rest.Request;
+import com.yolanda.nohttp.rest.RequestQueue;
 
+import org.json.JSONObject;
+
+import java.util.HashMap;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -19,6 +33,7 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
 
     //聚合数据：http://op.juhe.cn/onebox/weather/query?cityname=重庆&key=bcb6bfa67f8db11c66f43a92c00a6855
+    private String url = "http://op.juhe.cn/onebox/weather/query?cityname=重庆&key=bcb6bfa67f8db11c66f43a92c00a6855";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +46,103 @@ public class MainActivity extends AppCompatActivity {
                 weatherData();
             }
         });
+        findViewById(R.id.tv_nohttp).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                noHttpGetWeather();
+            }
+        });
+        findViewById(R.id.tv_nohttp_request_json).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                login();
+            }
+        });
+        findViewById(R.id.tv_nohttp_login).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                login2();
+            }
+        });
+    }
+
+    /**
+     * 正常登录
+     */
+    private void login2() {
+        //第一步 请求队列 并指定并发为3
+        RequestQueue queue = NoHttp.newRequestQueue(3);
+        Request<String> request = NoHttp.createStringRequest(Constant.SERVICE_API_ADDRESS+"user/rainbowlogin",RequestMethod.POST);
+
+        Map<String, String> parameter = new HashMap<>();
+        parameter.put("customerAccount", "18696855784");
+        parameter.put("passWord", "555555");
+
+        request.add(parameter);
+        queue.add(2,request,responseListener);
+
+    }
+
+    /**
+     * NoHttp 提交一个表单
+     */
+    private void login() {
+        LoginEntity loginEntity = new LoginEntity();
+        loginEntity.setClient_token("fjahfalkfhalkfnalkfmaf");;
+        loginEntity.setClient_type("android");
+        loginEntity.setCurrent_version("1.0.0");
+        loginEntity.setSignature("MTg2OTY4NTU3ODQ6NTU1NTU=");
+
+        final Gson gson = new Gson();
+        String json = gson.toJson(loginEntity);
+
+        final RequestQueue requestQueue = NoHttp.newRequestQueue();
+        Request<JSONObject> request = NoHttp.createJsonObjectRequest(Constant.LOGIN_BASE_URL,RequestMethod.POST);
+        // 提交json字符串
+        request.setDefineRequestBodyForJson(json);
+
+        requestQueue.add(1, request, new OnResponseListener<JSONObject>() {
+            @Override
+            public void onStart(int what) {
+
+            }
+
+            @Override
+            public void onSucceed(int what, com.yolanda.nohttp.rest.Response<JSONObject> response) {
+                try {
+//                    ViseLog.d("result-->"+response.get().toString());
+                    JSONObject resultJsobject=response.get();
+                    String status = resultJsobject.getString("status");
+                    if(status.equals("1")){
+                        ViseLog.d(resultJsobject);
+                    }else {
+                        ViseLog.d(resultJsobject);
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailed(int what, com.yolanda.nohttp.rest.Response<JSONObject> response) {
+                ViseLog.e("error-->"+response.get());
+            }
+
+            @Override
+            public void onFinish(int what) {
+
+            }
+        });
+
+
+
+    }
+
+    private void noHttpGetWeather() {
+        // 如果要指定并发值，传入数字即可：NoHttp.newRequestQueue(3);
+        RequestQueue requestQueue = NoHttp.newRequestQueue();
+        Request<String> request = NoHttp.createStringRequest(url,RequestMethod.GET);
+        requestQueue.add(0, request, responseListener);
     }
 
     private void weatherData() {
@@ -83,4 +195,41 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    /**
+     * 请求监听
+     */
+    private OnResponseListener<String> responseListener = new OnResponseListener<String>() {
+        @Override
+        public void onStart(int what) {
+
+        }
+
+        @Override
+        public void onSucceed(int what, com.yolanda.nohttp.rest.Response<String> response) {
+            switch (what){
+                case 0:
+                    ViseLog.d("result-->"+response.get());
+                    Gson gson = new Gson();
+                    WeatherEntity weatherEntity = gson.fromJson(response.get(),WeatherEntity.class);
+                    ViseLog.d("----------->"+weatherEntity.getReason());
+                    break;
+                case 2:
+                    ViseLog.d("result-->"+response.get());
+                    break;
+            }
+
+        }
+
+        @Override
+        public void onFailed(int what, com.yolanda.nohttp.rest.Response<String> response) {
+            ViseLog.e("error-->"+response.get());
+        }
+
+        @Override
+        public void onFinish(int what) {
+
+        }
+    };
+
 }

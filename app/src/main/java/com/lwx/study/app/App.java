@@ -5,6 +5,8 @@ import android.util.Log;
 
 import com.vise.log.ViseLog;
 import com.vise.log.inner.DefaultTree;
+import com.yanzhenjie.nohttp.OkHttpNetworkExecutor;
+import com.yolanda.nohttp.Logger;
 import com.yolanda.nohttp.NoHttp;
 
 /**
@@ -28,12 +30,17 @@ public class App extends Application {
     }
 
     private void initNoHttp() {
+        //详细：https://github.com/HYVincent/NoHttp
         NoHttp.initialize(this, new NoHttp.Config()
                 // 设置全局连接超时时间，单位毫秒
                 .setConnectTimeout(30 * 1000)
                 // 设置全局服务器响应超时时间，单位毫秒
                 .setReadTimeout(30 * 1000)
+                .setNetworkExecutor(new OkHttpNetworkExecutor())//切换为OkHttp为网络底层
         );
+
+        Logger.setDebug(true);// 开启NoHttp的调试模式, 配置后可看到请求过程、日志和错误信息。
+        Logger.setTag("NoHttpSample");// 设置NoHttp打印Log的tag。
     }
 
     private void initLogs() {

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.lwx.study.ui.MainActivity">
 
     <TextView
@@ -14,4 +15,25 @@
         android:padding="5dp"
         android:text="Call 获取天气" />
 
-</RelativeLayout>
+    <TextView
+        android:id="@+id/tv_nohttp"
+        android:padding="5dp"
+        android:text="NoHttp 获取天气信息"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_nohttp_request_json"
+        android:padding="5dp"
+        android:text="NoHttp json参数登录"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_nohttp_login"
+        android:padding="5dp"
+        android:text="NoHttp 登录"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>
