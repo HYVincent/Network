@@ -3,6 +3,8 @@ package com.lwx.study.app;
 import android.app.Application;
 import android.util.Log;
 
+import com.blankj.utilcode.utils.ToastUtils;
+import com.blankj.utilcode.utils.Utils;
 import com.vise.log.ViseLog;
 import com.vise.log.inner.DefaultTree;
 import com.yanzhenjie.nohttp.OkHttpNetworkExecutor;
@@ -19,14 +21,15 @@ import com.yolanda.nohttp.NoHttp;
  */
 
 public class App extends Application {
-    private static App app;
 
+    private static App app;
 
     @Override
     public void onCreate() {
         super.onCreate();
         initNoHttp();
         initLogs();
+        Utils.init(this);
     }
 
     private void initNoHttp() {

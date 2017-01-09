@@ -1,19 +1,25 @@
 package com.lwx.study.ui;
 
+import android.app.ActivityManager;
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.google.gson.Gson;
 import com.lwx.study.R;
 import com.lwx.study.app.Constant;
+import com.lwx.study.bean.Bean;
 import com.lwx.study.bean.LoginEntity;
 import com.lwx.study.bean.Result;
 import com.lwx.study.bean.Result2;
 import com.lwx.study.bean.WeatherEntity;
 import com.lwx.study.network.ApiManager;
+import com.lwx.study.rx.RxBusUtil;
 import com.vise.log.ViseLog;
 import com.yolanda.nohttp.NoHttp;
 import com.yolanda.nohttp.RequestMethod;
@@ -25,20 +31,28 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import rx.Subscription;
+import rx.functions.Action1;
 
 public class MainActivity extends AppCompatActivity {
 
     //聚合数据：http://op.juhe.cn/onebox/weather/query?cityname=重庆&key=bcb6bfa67f8db11c66f43a92c00a6855
     private String url = "http://op.juhe.cn/onebox/weather/query?cityname=重庆&key=bcb6bfa67f8db11c66f43a92c00a6855";
+    private Subscription sub;
+    private TextView tvSub;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ViseLog.d("当前Activity名称-->"+
+                ((ActivityManager.RunningTaskInfo) ((ActivityManager) getSystemService(Context.ACTIVITY_SERVICE))
+                        .getRunningTasks(1).get(0)).topActivity.getClassName());
         findViewById(R.id.tv_click).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,6 +76,29 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 login2();
+            }
+        });
+        tvSub=(TextView)findViewById(R.id.tv_rxbus);
+        tvSub.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this,SecondActivity.class));
+            }
+        });
+
+        sub = RxBusUtil.getInstance().bus.subscribe(new Action1() {
+            @Override
+            public void call(Object o) {
+                ToastUtils.defaultToast2(MainActivity.this,"收到信息了，我要更新数据啦");
+                tvSub.setText(((Bean) o).getNum()+"");
+            }
+        });//在这里接收数据
+
+        findViewById(R.id.tv_toast).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                com.blankj.utilcode.utils.ToastUtils.init(true);
+                com.blankj.utilcode.utils.ToastUtils.showLongToast("......");
             }
         });
     }
@@ -231,5 +268,11 @@ public class MainActivity extends AppCompatActivity {
 
         }
     };
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(sub!=null){
+            sub.unsubscribe();
+        }
+    }
 }
