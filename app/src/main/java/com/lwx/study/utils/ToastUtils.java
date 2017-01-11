@@ -1,4 +1,4 @@
-package com.lwx.study.ui;
+package com.lwx.study.utils;
 
 import android.content.Context;
 import android.view.Gravity;

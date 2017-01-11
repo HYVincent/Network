@@ -39,10 +39,8 @@ public class SecondActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Random random = new Random();
                 RxBusUtil.getInstance().post(new Bean("B_Activity",random.nextInt(10000))); //发送一个对象
-
                 finish();
             }
         });
-
     }
 }

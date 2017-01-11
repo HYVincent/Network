@@ -9,17 +9,16 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.google.gson.Gson;
 import com.lwx.study.R;
 import com.lwx.study.app.Constant;
 import com.lwx.study.bean.Bean;
 import com.lwx.study.bean.LoginEntity;
 import com.lwx.study.bean.Result;
-import com.lwx.study.bean.Result2;
 import com.lwx.study.bean.WeatherEntity;
 import com.lwx.study.network.ApiManager;
 import com.lwx.study.rx.RxBusUtil;
+import com.lwx.study.utils.ToastUtils;
 import com.vise.log.ViseLog;
 import com.yolanda.nohttp.NoHttp;
 import com.yolanda.nohttp.RequestMethod;
@@ -31,7 +30,6 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -44,7 +42,8 @@ public class MainActivity extends AppCompatActivity {
     //聚合数据：http://op.juhe.cn/onebox/weather/query?cityname=重庆&key=bcb6bfa67f8db11c66f43a92c00a6855
     private String url = "http://op.juhe.cn/onebox/weather/query?cityname=重庆&key=bcb6bfa67f8db11c66f43a92c00a6855";
     private Subscription sub;
-    private TextView tvSub;
+    private TextView tvSub,tvWebView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +100,15 @@ public class MainActivity extends AppCompatActivity {
                 com.blankj.utilcode.utils.ToastUtils.showLongToast("......");
             }
         });
+        findViewById(R.id.tv_webView).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this,WebViewTestActivity.class));
+            }
+        });
     }
+
+
 
     /**
      * 正常登录
