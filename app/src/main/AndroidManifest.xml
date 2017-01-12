@@ -26,6 +26,8 @@
 
         <activity android:name=".ui.SecondActivity"/>
         <activity android:name=".ui.WebViewTestActivity"/>
+        <activity android:name=".ui.TestActivity"/>
+        <activity android:name=".ui.ButtomChangeActivity"/>
     </application>
 
 </manifest>
