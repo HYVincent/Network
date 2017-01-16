@@ -28,6 +28,13 @@
         <activity android:name=".ui.WebViewTestActivity"/>
         <activity android:name=".ui.TestActivity"/>
         <activity android:name=".ui.ButtomChangeActivity"/>
+
+
+        <receiver android:name=".network.NetWorkStateChangeReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
