@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setStatusBar();
-        getSupportActionBar().hide();
+//        getSupportActionBar().hide();
         ViseLog.d("当前Activity名称-->" +
                 ((ActivityManager.RunningTaskInfo) ((ActivityManager) getSystemService(Context.ACTIVITY_SERVICE))
                         .getRunningTasks(1).get(0)).topActivity.getClassName());
@@ -124,6 +124,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this,ButtomChangeActivity.class));
+            }
+        });
+        findViewById(R.id.tv_img).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this,SelectImgActivity.class));
             }
         });
     }
