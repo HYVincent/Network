@@ -3,10 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Network.iml" filepath="$PROJECT_DIR$/Network.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Network.iml" filepath="$PROJECT_DIR$/Network.iml" />
       <module fileurl="file://$PROJECT_DIR$/Study.iml" filepath="$PROJECT_DIR$/Study.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dutil/dutil.iml" filepath="$PROJECT_DIR$/dutil/dutil.iml" />
       <module fileurl="file://$PROJECT_DIR$/pickphotoview/pickphotoview.iml" filepath="$PROJECT_DIR$/pickphotoview/pickphotoview.iml" />
     </modules>
   </component>
