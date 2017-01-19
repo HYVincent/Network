@@ -30,11 +30,28 @@
         <activity android:name=".ui.ButtomChangeActivity"/>
         <activity android:name=".ui.SelectImgActivity"/>
 
+        <service android:name=".service.DownloadService"/>
+        <activity android:name=".ui.WebViewActivity"/>
+
         <receiver android:name=".network.NetWorkStateChangeReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
+
+
+        <!--适配android7.0apk安装 start-->
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.lwx.study.fileprovider"
+            android:grantUriPermissions="true"
+            android:exported="false"
+            >
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+        <!--适配android7.0apk安装 end-->
     </application>
 
 </manifest>

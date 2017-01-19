@@ -1,9 +1,13 @@
 package com.lwx.study.ui;
 
 import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Build;
+import android.os.Environment;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -20,6 +24,7 @@ import com.lwx.study.bean.Result;
 import com.lwx.study.bean.WeatherEntity;
 import com.lwx.study.network.ApiManager;
 import com.lwx.study.rx.RxBusUtil;
+import com.lwx.study.service.DownloadService;
 import com.lwx.study.utils.StatusBarUtil;
 import com.lwx.study.utils.SystemUtilts;
 import com.lwx.study.utils.ToastUtils;
@@ -49,6 +54,21 @@ public class MainActivity extends AppCompatActivity {
     private Subscription sub;
     private TextView tvSub, tvWebView;
     private SystemBarTintManager tintManager;
+
+    private String downUrl = "http://gdown.baidu.com/data/wisegame/f16c8fbacb9ee04d/QQ_478.apk";
+    private DownloadService.DownloadBinder downloadBinder;
+
+    private ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            downloadBinder = (DownloadService.DownloadBinder) service;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
 
 
     @Override
@@ -132,6 +152,59 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this,SelectImgActivity.class));
             }
         });
+
+
+        Intent intent = new Intent(this, DownloadService.class);
+        bindService(intent, connection, BIND_AUTO_CREATE);
+
+
+        findViewById(R.id.tv_1).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(downloadBinder!=null){
+                    downloadBinder.startDownload(Environment.getExternalStorageDirectory() + "/DUtil/",
+                            "学习.apk",
+                            downUrl,
+                            (int) System.currentTimeMillis());//开始下载
+                }else {
+                    ViseLog.e("空指针...");
+                    com.blankj.utilcode.utils.ToastUtils.showLongToast(" downloadBinder 空指针");
+                }
+
+            }
+        });
+        findViewById(R.id.tv_2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                downloadBinder.pauseDownload(downUrl);//暂停
+            }
+        });
+        findViewById(R.id.tv_3).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                downloadBinder.resumeDownload(downUrl);//继续
+            }
+        });
+        findViewById(R.id.tv_4).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                downloadBinder.cancelDownload(downUrl);//取消
+            }
+        });
+        findViewById(R.id.tv_5).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                downloadBinder.restartDownload(downUrl);//重启下载
+            }
+        });
+        findViewById(R.id.tt_webview).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this,WebViewActivity.class));
+            }
+        });
+
+
     }
 
     private void setStatusBar() {
@@ -316,5 +389,6 @@ public class MainActivity extends AppCompatActivity {
         if (sub != null) {
             sub.unsubscribe();
         }
+        unbindService(connection);
     }
 }
