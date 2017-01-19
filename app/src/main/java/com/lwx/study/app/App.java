@@ -10,6 +10,12 @@ import com.vise.log.inner.DefaultTree;
 import com.yanzhenjie.nohttp.OkHttpNetworkExecutor;
 import com.yolanda.nohttp.Logger;
 import com.yolanda.nohttp.NoHttp;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.log.LoggerInterceptor;
+
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
 
 /**
  * description ：
@@ -28,8 +34,21 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         initNoHttp();
+        initOkHttpUtils();
         initLogs();
         Utils.init(this);
+    }
+
+    private void initOkHttpUtils() {
+        //https://github.com/hongyangAndroid/okhttputils
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(new LoggerInterceptor("Network"))
+                .connectTimeout(10000L, TimeUnit.MILLISECONDS)
+                .readTimeout(10000L, TimeUnit.MILLISECONDS)
+                //其他配置
+                .build();
+
+        OkHttpUtils.initClient(okHttpClient);
     }
 
     private void initNoHttp() {
