@@ -57,12 +57,8 @@ dependencies {
     /** 适配android6.0的权限兼容           */
     compile 'com.github.hotchemi:permissionsdispatcher:2.1.3'
     apt 'com.github.hotchemi:permissionsdispatcher-processor:2.1.3'
-<<<<<<< HEAD
-
 
     /**OkHttpUtils https://github.com/hongyangAndroid/okhttputils */
     compile 'com.zhy:okhttputils:2.6.2'
-=======
     compile project(':dutil')
->>>>>>> 0230cd8907bd802daf6debdcafccb275ff8f74f3
 }
